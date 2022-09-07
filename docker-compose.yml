@@ -1,0 +1,57 @@
+version: '3.8'
+
+services:
+  file_storage:
+    image: quay.io/minio/minio
+    restart: always
+    environment:
+      MINIO_ROOT_USER: ROOTUSER
+      MINIO_ROOT_PASSWORD: CHANGEME123
+    ports:
+      - 9001:9001
+    command: server --console-address ":9001" /data
+  redis:
+    image: "redis:alpine"
+    command: redis-server
+    ports:
+     - "6379:6379"
+  db:
+    image: mariadb
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+      MYSQL_DATABASE: mydb
+      MYSQL_USER: user
+      MYSQL_PASSWORD: user
+    ports:
+      - 3306:3306
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+  cv_manager:
+    build:
+      context: ./cv-manager
+      dockerfile: Dockerfile
+      target: development
+    volumes:
+      - ./cv-manager:/usr/src/app
+    ports:
+      - 3000:3000
+    depends_on:
+      - file_storage
+      - db
+      - redis
+  cv_processor:
+    build:
+      context: ./cv-processor
+      dockerfile: Dockerfile
+      target: development
+    volumes:
+      - ./cv-processor:/usr/src/app
+    ports:
+      - 3001:3001
+    depends_on:
+      - file_storage
+      - redis
