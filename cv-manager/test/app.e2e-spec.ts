@@ -15,10 +15,19 @@ describe('AppController (e2e)', () => {
     await app.init();
   });
 
-  it('/ (GET)', () => {
+  it('/authorization/signup (POST)', () => {
     return request(app.getHttpServer())
-      .get('/')
+      .post('/authorization/signup')
+      .send({name: 'john', email:'john.something@gmail.com', password:'s3cr3t'})
+      .set('Accept', 'application/json')
       .expect(200)
-      .expect('Hello World!');
+  });
+
+  it('/authorization/login (POST)', () => {
+    return request(app.getHttpServer())
+      .post('/authorization/login')
+      .send({email:'john.something@gmail.com', password:'s3cr3t'})
+      .set('Accept', 'application/json')
+      .expect(200)
   });
 });
