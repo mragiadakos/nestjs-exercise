@@ -15,7 +15,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\":\"manos@gmail.com\",\n    \"password\":\"lalallaa\",\n    \"name\":\"manos\"\n}",
+							"raw": "{\n    \"email\":\"manos@gmail.com\",\n    \"password\":\"s3cr3t\",\n    \"name\":\"manos\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -44,7 +44,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\":\"manos@gmail.com\",\n    \"password\":\"lalallaa\"\n}",
+							"raw": "{\n    \"email\":\"manos@gmail.com\",\n    \"password\":\"s3cr3t\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -70,7 +70,19 @@
 					"name": "me",
 					"request": {
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/authorization/me",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"authorization",
+								"me"
+							]
+						}
 					},
 					"response": []
 				},
@@ -78,7 +90,106 @@
 					"name": "logout",
 					"request": {
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/authorization/logout",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"authorization",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add CV",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/home/anon/Downloads/The Elements of Style, 4th Edition.pdf"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:3000/cv",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"cv"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET CV info",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/cv",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"cv"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Download CV",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/cv/download",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"cv",
+								"download"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete CV",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/cv",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"cv"
+							]
+						}
 					},
 					"response": []
 				}

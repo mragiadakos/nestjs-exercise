@@ -18,16 +18,20 @@ describe('AppController (e2e)', () => {
   it('/authorization/signup (POST)', () => {
     return request(app.getHttpServer())
       .post('/authorization/signup')
-      .send({name: 'john', email:'john.something@gmail.com', password:'s3cr3t'})
+      .send({
+        name: 'john',
+        email: 'john.something@gmail.com',
+        password: 's3cr3t',
+      })
       .set('Accept', 'application/json')
-      .expect(200)
+      .expect(200);
   });
 
   it('/authorization/login (POST)', () => {
     return request(app.getHttpServer())
       .post('/authorization/login')
-      .send({email:'john.something@gmail.com', password:'s3cr3t'})
+      .send({ email: 'john.something@gmail.com', password: 's3cr3t' })
       .set('Accept', 'application/json')
-      .expect(200)
+      .expect(200);
   });
 });

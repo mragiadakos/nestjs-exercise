@@ -8,6 +8,7 @@
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "nest build",
+    "migrate:dev" : "npx prisma migrate dev --name init",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",
@@ -33,6 +34,7 @@
     "class-validator": "^0.13.2",
     "express-session": "^1.17.3",
     "minio": "^7.0.32",
+    "nestjs-minio-client": "^2.0.0",
     "passport-local": "^1.0.0",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
