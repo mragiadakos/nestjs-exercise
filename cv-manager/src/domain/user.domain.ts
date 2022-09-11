@@ -44,7 +44,7 @@ export class UserDomain {
     if (!userObj) {
       return new Error('user ' + user.email + ' does not exists');
     }
-    const err = this.cvDomain.deleteCV(user)
+    const err = await this.cvDomain.deleteCV(user)
     if(err instanceof Error){
       return err
     }

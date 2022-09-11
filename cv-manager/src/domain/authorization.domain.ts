@@ -26,7 +26,7 @@ export class AuthorizationDomain {
       return new Error('user ' + input.email + ' does not exists');
     }
 
-    const isCor = bcrypt.compare(input.password,userObj.password)
+    const isCor = await bcrypt.compare(input.password,userObj.password)
     if (!isCor) {
       return new Error('password not correct');
     }

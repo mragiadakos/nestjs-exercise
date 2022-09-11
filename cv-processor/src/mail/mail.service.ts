@@ -17,7 +17,6 @@ export class MailService {
         mimetype
       },
     });
-    console.log("send the email")
   }
 }
 

@@ -52,9 +52,22 @@ export class CVDomain {
     const curCV = await this.cvRepo.cv({ authorId: user.id })
     let newCV: CV
     if (curCV) {
-      newCV = await this.cvRepo.updateCV({ where: { authorId: user.id }, data: { etagId: res.etag, name: file.originalname } })
+      newCV = await this.cvRepo.updateCV({
+        where: { authorId: user.id }, data: {
+          etagId: res.etag,
+          name: file.originalname,
+          size: file.size,
+          mimetype: file.mimetype
+        }
+      })
     } else {
-      newCV = await this.cvRepo.createCV({ author: { connect: { id: user.id } }, etagId: res.etag, name: file.originalname })
+      newCV = await this.cvRepo.createCV({
+        author: { connect: { id: user.id } },
+        etagId: res.etag,
+        name: file.originalname,
+        size: file.size,
+        mimetype: file.mimetype
+      })
     }
 
     this.processCVQueue.add('cv', {

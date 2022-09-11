@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-  file_storage:
+  minio:
     image: quay.io/minio/minio
     restart: always
     environment:
@@ -26,6 +26,11 @@ services:
       MYSQL_PASSWORD: user
     ports:
       - 3306:3306
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost", "-uroot", "-pexample"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
   adminer:
     image: adminer
     restart: always
@@ -37,29 +42,4 @@ services:
       - 3080:80
       - "2525:25"
     restart: always
-    
-  # cv_manager:
-  #   build:
-  #     context: ./cv-manager
-  #     dockerfile: Dockerfile
-  #     target: development
-  #   volumes:
-  #     - ./cv-manager:/usr/src/app
-  #   ports:
-  #     - 3000:3000
-  #   depends_on:
-  #     - file_storage
-  #     - db
-  #     - redis
-  # cv_processor:
-  #   build:
-  #     context: ./cv-processor
-  #     dockerfile: Dockerfile
-  #     target: development
-  #   volumes:
-  #     - ./cv-processor:/usr/src/app
-  #   ports:
-  #     - 3001:3001
-  #   depends_on:
-  #     - file_storage
-  #     - redis
+  

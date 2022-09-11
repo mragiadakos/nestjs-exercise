@@ -1,0 +1,57 @@
+version: '3.8'
+
+services:
+  cv_processor:
+    build:
+      context: ./cv-processor
+      dockerfile: Dockerfile
+      target: production
+    volumes:
+      - ./cv-processor:/usr/src/app
+    ports:
+      - 3005:3005
+    depends_on:
+      - minio
+      - redis
+      - fakeSMTP
+    environment: 
+      - MINIO_HOST=minio
+      - MINIO_PORT=9000
+      - MINIO_ACCESS_KEY=ROOTUSER
+      - MINIO_SECRET_KEY=CHANGEME123
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - SMTP_HOST=fakeSMTP
+      - SMTP_PORT=25
+      - PORT=3005
+  cv_manager:
+    build:
+      context: ./cv-manager
+      dockerfile: Dockerfile
+      target: production
+    volumes:
+      - ./cv-manager:/usr/src/app
+    ports:
+      - 3000:3000
+    depends_on:
+      minio:
+        condition: service_started
+      redis:
+        condition: service_started
+      cv_processor:
+        condition: service_started
+      db:
+        condition: service_healthy
+    links:
+      - db
+    environment:
+      - DATABASE_URL=mysql://root:example@db:3306/mydb
+      - MINIO_HOST=minio
+      - MINIO_PORT=9000
+      - MINIO_ACCESS_KEY=ROOTUSER
+      - MINIO_SECRET_KEY=CHANGEME123
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - SESSION_SECRET=s3cr3tp4ss
+      - PORT=3000
+  

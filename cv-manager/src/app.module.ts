@@ -6,26 +6,30 @@ import { UserRepository } from './repos/user.repository';
 import { PrismaService } from './prisma/prisma.service';
 import { AuthorizationDomain } from './domain/authorization.domain';
 import { AuthModule } from './auth/auth.module';
-import { MinioModule, MinioService } from 'nestjs-minio-client';
+import { MinioModule } from 'nestjs-minio-client';
 import { CVController } from './controllers/cv.controller';
 import { CVRepository } from './repos/cv.repository';
 import { CVDomain } from './domain/cv.domain';
 import { UserDomain } from './domain/user.domain';
 import { UserController } from './controllers/user.controller';
 import { BullModule } from '@nestjs/bull';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [AuthModule, MinioModule.register({
-    endPoint: '127.0.0.1',
-    port: 9000,
-    useSSL: false,
-    accessKey: 'ROOTUSER',
-    secretKey: 'CHANGEME123'
-  }),
+  imports: [
+    ConfigModule.forRoot(),
+    AuthModule,
+    MinioModule.register({
+      endPoint: process.env.MINIO_HOST,
+      port: parseInt(process.env.MINIO_PORT,10),
+      useSSL: false,
+      accessKey: process.env.MINIO_ACCESS_KEY,
+      secretKey: process.env.MINIO_SECRET_KEY
+    }),
     BullModule.forRoot({
       redis: {
-        host: 'localhost',
-        port: 6379,
+        host: process.env.REDIS_HOST,
+        port: parseInt(process.env.REDIS_PORT,10),
       },
     }),
     BullModule.registerQueue({

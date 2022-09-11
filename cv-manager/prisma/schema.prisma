@@ -16,6 +16,8 @@ model CV {
   authorId Int    @unique
   name     String
   etagId   String
+  size     Int
+  mimetype String
 }
 
 model User {

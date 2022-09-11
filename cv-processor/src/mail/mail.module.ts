@@ -3,13 +3,15 @@ import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handleba
 import { Module } from '@nestjs/common';
 import { MailService } from './mail.service';
 import { join } from 'path';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot(),
     MailerModule.forRoot({
       transport: {
-        host: 'localhost',
-        port: 2525,
+        host: process.env.SMTP_HOST,
+        port: parseInt(process.env.SMTP_PORT,10),
         //auth: null,
       },
       defaults: {

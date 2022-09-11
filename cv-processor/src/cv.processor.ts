@@ -15,7 +15,7 @@ export class CVProcessor {
 
     @Process('cv')
     async handleCV(job: Job) {
-        const { bucket, objectName, filename, mimetype, username, email } = job.data;
+        const { bucket, objectName, filename, username, email } = job.data;
         if(!this.ft){
             this.ft =  await dynamicImport('file-type')
         }

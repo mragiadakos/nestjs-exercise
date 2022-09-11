@@ -8,8 +8,8 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 async function bootstrap() {
   const RedisStore = createRedisStore(session);
   const redis = new Redis({
-    host: 'localhost',
-    port: 6379,
+    host: process.env.REDIS_HOST,
+    port: parseInt(process.env.REDIS_PORT,10),
   });
   const app = await NestFactory.create(AppModule, {
     logger: ['log', 'debug', 'error', 'verbose', 'warn'],
@@ -17,7 +17,7 @@ async function bootstrap() {
   app.use(
     session({
       store: new RedisStore({ client: redis, logErrors: true }),
-      secret: 'secret',
+      secret: process.env.SESSION_SECRET,
       resave: false,
       saveUninitialized: false,
       cookie: {
@@ -25,19 +25,17 @@ async function bootstrap() {
       },
     }),
   );
-
   app.use(passport.initialize());
   app.use(passport.session());
-
   const config = new DocumentBuilder()
     .setTitle('CV Manager')
-    .setDescription('The CV manager API description')
+    .setDescription("This is CV Manager's API. A simple system to store/manage CVs in order to process them.")
     .setVersion('1.0')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
 
-  
-  await app.listen(3000);
+  const port = parseInt(process.env.PORT,10)
+  await app.listen(port);
 }
 bootstrap();

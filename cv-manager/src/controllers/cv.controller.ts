@@ -20,14 +20,26 @@ import { AuthenticatedGuard } from '../auth/authenticated.guard';
 import { User } from '@prisma/client';
 import { CVDomain } from '../domain/cv.domain';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { ApiBadRequestResponse, ApiBody, ApiConsumes, ApiForbiddenResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiProperty, ApiTags } from '@nestjs/swagger';
+import FileUploadDto from './fileUpload.dto';
 
 @Controller('cv')
+@ApiTags('CV')
 export class CVController {
   constructor(private readonly cvDomain: CVDomain) { }
 
   @UseGuards(AuthenticatedGuard)
   @Post('/')
   @UseInterceptors(FileInterceptor('file'))
+  @ApiOperation({summary:'Upload CV file', description:'Upload new CV file to the file storage and save the information in the DB.'})
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    description: 'A new CV document for the user',
+    type: FileUploadDto,
+  })
+  @ApiOkResponse({description:'Uploaded successfully'})
+  @ApiBadRequestResponse({description:'CV file failed to pass validations'})
+  @ApiForbiddenResponse({ description: 'Unauthorized Request' })
   async addCV(@Req() req: Request & { user: User },
     @Res() res: Response,
     @UploadedFile() file: Express.Multer.File) {
@@ -46,6 +58,10 @@ export class CVController {
 
   @UseGuards(AuthenticatedGuard)
   @Get('/')
+  @ApiOperation({summary: 'CV info',description:'Get information about the CV from DB'})
+  @ApiOkResponse({description:'CV info'})
+  @ApiNotFoundResponse({description: 'CV file not found'})
+  @ApiForbiddenResponse({ description: 'Unauthorized Request' })
   async getCV(@Req() req: Request & { user: User },
     @Res() res: Response) {
     const cvObj = await this.cvDomain.getCV(req.user)
@@ -61,6 +77,10 @@ export class CVController {
 
   @UseGuards(AuthenticatedGuard)
   @Get('/download')
+  @ApiOperation({summary:'Download CV file', description:'Download CV file from file storage'})
+  @ApiOkResponse({description:'Downloaded successfully'})
+  @ApiNotFoundResponse({description: 'CV file not found'})
+  @ApiForbiddenResponse({ description: 'Unauthorized Request' })
   async downloadCV(@Req() req: Request & { user: User },
     @Res() res: Response) {
     const cvObj = await this.cvDomain.downloadCV(req.user)
@@ -88,6 +108,10 @@ export class CVController {
 
   @UseGuards(AuthenticatedGuard)
   @Delete('/')
+  @ApiOperation({summary:'Delete CV file',description:'Delete CV file from DB and file storage if it exists.'})
+  @ApiOkResponse({description:'Deleted successfully'})
+  @ApiNotFoundResponse({description: 'CV file not found'})
+  @ApiForbiddenResponse({ description: 'Unauthorized Request' })
   async deleteCV(@Req() req: Request & { user: User },
     @Res() res: Response) {
     const err = await this.cvDomain.deleteCV(req.user)
