@@ -16,15 +16,17 @@ export class CVProcessor {
     @Process('cv')
     async handleCV(job: Job) {
         const { bucket, objectName, filename, mimetype, username, email } = job.data;
-        console.log(bucket, filename)
         if(!this.ft){
             this.ft =  await dynamicImport('file-type')
         }
         const objStream = await this.minioServ.client.getObject(bucket, objectName)
-        const size = objStream.readableLength
-        const mimeObj = await this.ft.fileTypeFromStream(objStream);
-        console.log(size, mimeObj)
+        const chunks = []
+        for await (let chunk of objStream) {
+            chunks.push(chunk)
+        }
+        const buf = Buffer.concat(chunks)
+        const size = buf.length
+        const mimeObj = await this.ft.fileTypeFromBuffer(buf);
         await this.mailService.sendUserCVInformation(email, username,filename,size,mimeObj.mime);
-        console.log('send')
     }
 }
