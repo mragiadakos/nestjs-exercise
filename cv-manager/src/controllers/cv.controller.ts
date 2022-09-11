@@ -31,7 +31,6 @@ export class CVController {
   async addCV(@Req() req: Request & { user: User },
     @Res() res: Response,
     @UploadedFile() file: Express.Multer.File) {
-    console.log(file)
     const cvObj = await this.cvDomain.addCV(req.user, file);
     if (cvObj instanceof Error) {
       res.status(HttpStatus.BAD_REQUEST).json({
@@ -83,7 +82,6 @@ export class CVController {
       res.status(HttpStatus.OK).end();
     });
     cvObj.readStream.on('error', err => {
-      console.log(err.stack);
       throw new BadRequestException(err.stack);
     });
   }

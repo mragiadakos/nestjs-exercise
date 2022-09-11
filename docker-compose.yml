@@ -15,7 +15,7 @@ services:
     image: "redis:alpine"
     command: redis-server
     ports:
-     - "6379:6379"
+     - 6379:6379
   db:
     image: mariadb
     restart: always
@@ -31,6 +31,13 @@ services:
     restart: always
     ports:
       - 8080:8080
+  fakeSMTP:
+    image: rnwood/smtp4dev:v3
+    ports:
+      - 3080:80
+      - "2525:25"
+    restart: always
+    
   # cv_manager:
   #   build:
   #     context: ./cv-manager

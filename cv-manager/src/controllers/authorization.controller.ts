@@ -1,50 +1,31 @@
 import {
-  Body,
   Controller,
-  HttpStatus,
   Post,
-  Res,
   Req,
   UseGuards,
   Get,
+  Body,
 } from '@nestjs/common';
-import { Response, Request } from 'express';
-import { AuthorizationDomain } from '../domain/authorization.domain';
-import { SignUpDto } from '../domain/dto';
+import {  Request } from 'express';
 import { LoginGuard } from '../auth/login.guard';
 import { AuthenticatedGuard } from '../auth/authenticated.guard';
 import { User } from '@prisma/client';
+import { LoginDto } from 'src/domain/dto';
 
 @Controller('authorization')
 export class AuthorizationController {
-  constructor(private readonly domainServ: AuthorizationDomain) {}
-  @Post('/signup')
-  async signUp(@Res() res: Response, @Body() signUpDto: SignUpDto) {
-    const err = await this.domainServ.signUp(signUpDto);
-    if (err) {
-      res.status(HttpStatus.BAD_REQUEST).json({
-        status: 'Bad Request',
-        message: err.message,
-      });
-      return;
-    }
-    res.status(HttpStatus.OK).json({ status: 'Success' });
-  }
+  constructor() {}
 
   @UseGuards(LoginGuard)
   @Post('/login')
-  login(@Req() req: Request & { user: User }): any {
+  login(@Req() req: Request & { user: User }, @Body() loginDto: LoginDto): any {
     return {
       User: req.user,
       status: 'Success',
     };
   }
 
-  @UseGuards(AuthenticatedGuard)
-  @Get('/me')
-  getMe(@Req() req: Request & { user: User }, @Res() res: Response) {
-    res.status(HttpStatus.OK).json(req.user);
-  }
+
 
   @UseGuards(AuthenticatedGuard)
   @Get('/logout')

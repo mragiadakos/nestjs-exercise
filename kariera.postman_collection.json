@@ -192,6 +192,14 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Delete Me",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
 				}
 			]
 		}

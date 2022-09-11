@@ -6,26 +6,40 @@ import { UserRepository } from './repos/user.repository';
 import { PrismaService } from './prisma/prisma.service';
 import { AuthorizationDomain } from './domain/authorization.domain';
 import { AuthModule } from './auth/auth.module';
-import { MinioModule } from 'nestjs-minio-client';
+import { MinioModule, MinioService } from 'nestjs-minio-client';
 import { CVController } from './controllers/cv.controller';
 import { CVRepository } from './repos/cv.repository';
 import { CVDomain } from './domain/cv.domain';
+import { UserDomain } from './domain/user.domain';
+import { UserController } from './controllers/user.controller';
+import { BullModule } from '@nestjs/bull';
 
 @Module({
-  imports: [AuthModule,  MinioModule.register({
+  imports: [AuthModule, MinioModule.register({
     endPoint: '127.0.0.1',
     port: 9000,
     useSSL: false,
     accessKey: 'ROOTUSER',
     secretKey: 'CHANGEME123'
-  })],
-  controllers: [AppController, AuthorizationController, CVController],
-  providers: [AppService, 
+  }),
+    BullModule.forRoot({
+      redis: {
+        host: 'localhost',
+        port: 6379,
+      },
+    }),
+    BullModule.registerQueue({
+      name: "process-cv"
+    })
+  ],
+  controllers: [AppController, AuthorizationController, CVController, UserController],
+  providers: [AppService,
     UserRepository,
     CVRepository,
-    PrismaService, 
+    PrismaService,
     AuthorizationDomain,
     CVDomain,
+    UserDomain,
   ],
 })
-export class AppModule {}
+export class AppModule { }
