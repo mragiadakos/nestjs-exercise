@@ -1,5 +1,14 @@
 # kariera-cv-exercise
 
+## Table of Contents
+- [Introduction](#introduction)
+- [List of services](#list-of-services)
+- [List of ports used](#list-of-ports-used)
+- [How to deploy everything](#how-to-deploy-everything)
+- [How to test everything](#how-to-test-everything)
+- [How to close everything](#how-to-close-everything)
+- [For development](#for-development)
+
 ## Introduction
 This is a simple system for users to store and manage their CVs.</br>
 The system has six important services that communicate to each other through the network.</br>
@@ -58,8 +67,8 @@ docker-compose -f docker-compose.yml -f docker-compose-services.yml down
 ```
 The system uses only ephemeral volumes, so you don't have to worry on looking for any volume to delete.
 
-## For enabling only the DBs
-For development or contribution, you will need to enable only partial of the services.
+## For development
+For development or contribution, you will need to enable only the peripheral services.
 ```shell
 docker-compose up
 ```
