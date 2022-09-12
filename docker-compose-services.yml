@@ -14,16 +14,8 @@ services:
       - minio
       - redis
       - fakeSMTP
-    environment: 
-      - MINIO_HOST=minio
-      - MINIO_PORT=9000
-      - MINIO_ACCESS_KEY=ROOTUSER
-      - MINIO_SECRET_KEY=CHANGEME123
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
-      - SMTP_HOST=fakeSMTP
-      - SMTP_PORT=25
-      - PORT=3005
+    env_file:
+      - ./cv-processor/.env.docker
   cv_manager:
     build:
       context: ./cv-manager
@@ -44,14 +36,6 @@ services:
         condition: service_healthy
     links:
       - db
-    environment:
-      - DATABASE_URL=mysql://root:example@db:3306/mydb
-      - MINIO_HOST=minio
-      - MINIO_PORT=9000
-      - MINIO_ACCESS_KEY=ROOTUSER
-      - MINIO_SECRET_KEY=CHANGEME123
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
-      - SESSION_SECRET=s3cr3tp4ss
-      - PORT=3000
+    env_file:
+      - ./cv-manager/.env.docker
   

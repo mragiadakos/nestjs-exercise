@@ -11,14 +11,13 @@ const dynamicImport = async (packageName: string) =>
 @Processor('process-cv')
 export class CVProcessor {
     private ft: any;
-    constructor(private readonly minioServ: MinioService,private mailService: MailService) {}
+    constructor(private readonly minioServ: MinioService,private mailService: MailService) {
+        dynamicImport('file-type').then(ft => this.ft=ft)
+    }
 
     @Process('cv')
     async handleCV(job: Job) {
         const { bucket, objectName, filename, username, email } = job.data;
-        if(!this.ft){
-            this.ft =  await dynamicImport('file-type')
-        }
         const objStream = await this.minioServ.client.getObject(bucket, objectName)
         const chunks = []
         for await (let chunk of objStream) {
